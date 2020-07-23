@@ -114,7 +114,8 @@ Used for moving data from one storage space to another. The value of source oper
 - register, immediate
 - memory, immediate
 - register, memory
-- memory, register
+- memory, register  
+
 !! Both the operands in MOV operation should be of same size  
 
 ### ARITHMETIC INSTRUCTIONS
@@ -127,14 +128,14 @@ INC EBX	     ; Increments 32-bit register
 #### DEC
 Decrements an operand (8-bit, 16-bit or 32-bit) by one.  
 ```
-DEC DL       ; Increments 8-bit register
-DEC [count]  ; Increments the count variable
+DEC DL       ; Decrements 8-bit register
+DEC [count]  ; Decrements the count variable
 ```
 
 #### ADD and SUB
 Used for performing simple addition/subtraction of binary data in byte, word and doubleword size.  
 
-`ADD/SUB destination, source `
+`ADD/SUB	destination, source `
 
 - DEST, SOURCE
 - Register to register
@@ -159,7 +160,7 @@ Generates two elements - a quotient and a remainder. The DIV (Divide) for unsign
 
 !! In case of division, overflow may occur. The processor generates an interrupt if overflow occurs.  
 
-`DIV/IDIV divisor`
+`DIV/IDIV	divisor`
 
 - *If divisor is byte:* The dividend is assumed to be in the AX register (16 bits). After division, the quotient goes to the AL register and the remainder goes to the AH register.
 
@@ -171,36 +172,36 @@ Generates two elements - a quotient and a remainder. The DIV (Divide) for unsign
 #### AND
 It returns 1, if the matching bits from both the operands are 1, otherwise it returns 0.  
 
-`AND AL, 01H	; ANDing with 0000 0001`
+`AND	AL, 01H     ; ANDing with 0000 0001`
 
 #### OR
 It returns 0, if both the bits are zero, otherwise it returns 1.  
 
-`OR AL, BL`
+`OR   AL, BL`
 
 #### XOR
 If the bits from the operands are same (both 0 or both 1), the resultant bit is cleared to 0, otherwise it sets to 1.  
 
-`XOR EAX, EAX`
+`XOR  EAX, EAX`
 
 #### TEST
 Works same as the AND operation, but it does not change the first operand. It can be used to check whether a number in a register is even or odd.  
 
-`TEST AL, 01H`
+`TEST   AL, 01H`
 
 #### NOT
 Reverses the bits in an operand. The operand could be either in a register or in the memory.  
 
-`NOT eax`
+`NOT   eax`
 
 ## SECTIONS
-`section.data`  
+- *section.data:*  
 constant values, file names, buffer size etc. does not change at runtime
 
-`section.bss`  
+- *section.bss*  
 variables
 
-`section.text`  
+- *section.text*  
 actual code 
 
 ```
@@ -220,4 +221,65 @@ _start:	                        ;tells linker entry point
 section	.data
   msg db 'Hello, world!', 0xa   ;string to be printed
   len equ $-msg                 ;length of the string
+```
+
+## CONDITIONS
+### CMP Instruction
+Compares two operands. It is generally used in conditional execution. Subtracts one operand from the other for comparing whether the operands are equal or not. It does not disturb the destination or source operands. 
+
+`CMP destination, source`
+
+### UNCONDITIONAL JUMP
+Provides a label name where the flow of control is transferred immediately.  
+
+`JMP label`
+
+```
+L20:
+ADD  AX, 01    ; Increment AX
+ADD  BX, AX    ; Add AX to BX
+JMP  L20       ; repeats the statements
+```
+
+### CONDITIONAL JUMP
+This is performed by a set of jump instructions j-condition- depending upon the condition. The conditional instructions transfer the control by breaking the sequential flow and they do it by changing the offset value in IP. If some specified condition is satisfied, the control flow is transferred to a target instruction.
+
+*For signed data:*  
+
+- INSTRUCTION --- DESCRIPTION --- FLAGS
+- JE / JZ --- Jump Equal or Jump Zero --- ZF
+- JNE / JNZ --- Jump not Equal or Jump Not Zero --- ZF
+- JG / JNLE --- Jump Greater or Jump Not Less/Equal --- OF,SF,ZF
+- JGE / JNL --- Jump Greater/Equal or Jump Not Less --- OF,SF
+- JL / JNGE --- Jump Less or Jump Not Greater/Equal --- OF,SF
+- JLE / JNG --- Jump Less/Equal or Jump Not Greater --- OF,SF,ZF
+
+*For unsigned data:*  
+- INSTRUCTION --- DESCRIPTION --- FLAGS
+- JE/JZ --- Jump Equal or Jump Zero --- ZF
+- JNE/JNZ --- Jump not Equal or Jump Not Zero --- ZF
+- JA/JNBE --- Jump Above or Jump Not Below/Equal --- CF-ZF
+- JAE/JNB --- Jump Above/Equal or Jump Not Below --- CF
+- JB/JNAE --- Jump Below or Jump Not Above/Equal --- CF
+- JBE/JNA --- Jump Below/Equal or Jump Not Above --- AF-CF
+
+*For check the value of flags:*
+- INSTRUCTION --- DESCRIPTION --- FLAGS
+- JXCZ --- Jump if CX is Zero --- none
+- JC --- Jump If Carry --- CF
+- JNC --- Jump If No Carry --- CF
+- JO --- Jump If Overflow --- OF
+- JNO --- Jump If No Overflow --- OF
+- JP/JPE --- Jump Parity or Jump Parity Even --- PF
+- JNP/JPO --- Jump No Parity or Jump Parity Odd --- PF
+- JS --- Jump Sign (negative value) --- SF
+- JNS --- Jump No Sign (positive value) --- SF
+
+```
+CMP	AL, BL
+JE	IS_EQUAL
+CMP	AL, BH
+JE	NON_EQUAL
+NON_EQUAL: ...
+IS_EQUAL: ...
 ```

@@ -58,7 +58,7 @@ interrupt -> int
 
 ```
 mov	edx,4		  ; message length
-mov	ecx,msg	      ; message to write
+mov	ecx,msg	      	  ; message to write
 mov	ebx,1		  ; file descriptor (stdout)
 mov	eax,4		  ; system call number (sys_write)
 int	0x80		  ; call kernel
@@ -134,7 +134,7 @@ DEC [count]  ; Increments the count variable
 #### ADD and SUB
 Used for performing simple addition/subtraction of binary data in byte, word and doubleword size.  
 
-`ADD/SUB	destination, source `
+`ADD/SUB destination, source `
 
 - DEST, SOURCE
 - Register to register
@@ -159,7 +159,7 @@ Generates two elements - a quotient and a remainder. The DIV (Divide) for unsign
 
 !! In case of division, overflow may occur. The processor generates an interrupt if overflow occurs.  
 
-`DIV/IDIV	divisor`
+`DIV/IDIV divisor`
 
 - *If divisor is byte:* The dividend is assumed to be in the AX register (16 bits). After division, the quotient goes to the AL register and the remainder goes to the AH register.
 
@@ -171,27 +171,27 @@ Generates two elements - a quotient and a remainder. The DIV (Divide) for unsign
 #### AND
 It returns 1, if the matching bits from both the operands are 1, otherwise it returns 0.  
 
-`AND	AL, 01H     ; ANDing with 0000 0001`
+`AND AL, 01H	; ANDing with 0000 0001`
 
 #### OR
 It returns 0, if both the bits are zero, otherwise it returns 1.  
 
-`OR   AL, BL`
+`OR AL, BL`
 
 #### XOR
 If the bits from the operands are same (both 0 or both 1), the resultant bit is cleared to 0, otherwise it sets to 1.  
 
-`XOR  EAX, EAX`
+`XOR EAX, EAX`
 
 #### TEST
 Works same as the AND operation, but it does not change the first operand. It can be used to check whether a number in a register is even or odd.  
 
-`TEST   AL, 01H`
+`TEST AL, 01H`
 
 #### NOT
 Reverses the bits in an operand. The operand could be either in a register or in the memory.  
 
-`NOT   eax`
+`NOT eax`
 
 ## SECTIONS
 `section.data`  

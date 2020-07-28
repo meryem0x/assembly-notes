@@ -12,7 +12,7 @@ I am a sign, not a cop
 
 - *AX - primary accumulator* - arithmetic instructions
 - *BX - base register* - indexed addressing
-- *CX - count register* - stores the loop count in iterative o operations
+- *CX - count register* - stores the loop count in iterative operations
 - *DX - data register* - input/output
 
 #### POINTER REGISTERS
@@ -104,7 +104,8 @@ Defines both numeric and string constants. Allows redefinition, case-sensitive.
 
 ## INSTRUCTIONS
 
-### MOV
+### DATA TRANSFER INSTRUCTIONS
+#### MOV
 Used for moving data from one storage space to another. The value of source operand remains unchanged.  
 
 `MOV destination, source`  
@@ -117,6 +118,26 @@ Used for moving data from one storage space to another. The value of source oper
 - memory, register  
 
 !! Both the operands in MOV operation should be of same size  
+
+#### MOVSX
+Move with sign extension. Copies the src operand in the dest operand and pads the remaining bits not provided by src with the sign bit (the MSB) of src. 
+
+`MOVSX EAX, AL`
+
+#### MOVZX
+Move with zero extension. Copies data from the src operand to the dest operand, but the the remaining bits in dest that are not provided by src are filled with zeros. Useful for copying a small, unsigned value to a bigger register. 
+
+`MOVZX EAX, AL`
+
+#### XCHG
+Swaps the src operand with the dest operand.
+
+`XCHG AX, BX`
+
+#### LEA
+Load effective address. Calculates the address of the src operand and loads it into the dest operand.
+
+`LEA SI, data`
 
 ### ARITHMETIC INSTRUCTIONS
 #### INC
@@ -193,6 +214,22 @@ Works same as the AND operation, but it does not change the first operand. It ca
 Reverses the bits in an operand. The operand could be either in a register or in the memory.  
 
 `NOT   eax`
+
+### CALLING INSTRUCTIONS
+#### CALL
+Pushes the return address (address immediately after the CALL instruction) on the stack. Changes EIP to the call destination. This effectively transfers control to the call target and begins execution there.
+
+`CALL function_name`
+
+#### INT
+Generates a software interrupt.
+
+`INT	0x80`
+
+#### RET
+Transfers program control to a return address located on the top of the stack. This address is usually placed on the stack by a CALL instruction.
+
+`RET`
 
 ## SECTIONS
 - *section.data:*  
@@ -282,4 +319,17 @@ CMP	AL, BH
 JE	NON_EQUAL
 NON_EQUAL: ...
 IS_EQUAL: ...
+```
+
+## LOOP
+Assumes that the ECX register contains the loop count. When it is executed, the ECX register is decremented and the control jumps to the target label, until the ECX register value reaches the value zero.
+
+```
+  MOV total, 0
+  MOV CX, 5         ;execute the loop 5 times
+  MOV SI, 1
+L1:   
+  ADD total, SI
+  INC SI
+  LOOP L1
 ```
